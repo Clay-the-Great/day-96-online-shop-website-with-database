@@ -1,0 +1,27 @@
+h4 {
+    font-weight: 400;
+}
+
+.side-by-side form,
+.side-by-side form div{
+    display: inline;
+}
+
+.side-by-side button{
+    display: inline;
+    vertical-align: middle;
+}
+
+.add{
+    float: left;
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}
+
+.minus{
+    float: right;
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}

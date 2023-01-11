@@ -1,0 +1,105 @@
+{% include "header.html" %}
+
+  <!-- Page Header -->
+  {% if type == "home": %}
+  <header class="masthead" style="background-image: url('/static/img/shopping-mall.jpg')">
+  {% endif %}
+  {% if type == "cart": %}
+  <header class="masthead" style="background-image: url('/static/img/Grocery-Cart-Etiquette.jpeg')">
+  {% endif %}
+<!--  <header class="masthead" style="background-image: url('https://images.unsplash.com/photo-1470092306007-055b6797ca72?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80')">-->
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            {% if type == "home": %}
+            <h1>Online Shop</h1>
+            <span class="subheading">We offer a great range of choices.</span>
+            {% endif %}
+            {% if type == "cart": %}
+            <h1>My Cart</h1>
+            <span class="subheading">Excellent choice.</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        {% for cafe in all_cafes %}
+        <div class="post-preview">
+          <a href="#">
+            <h2 class="post-title">
+              {{cafe.name}}
+            </h2>
+            <h3 class="post-subtitle">
+              {{cafe.location}}
+            </h3>
+            <p>
+            {% if type == "home" and current_user_id in owners: %}
+            <a class="btn btn-primary" href="{{url_for('delete_post', post_id=cafe.id) }}" style="text-decoration: none; margin-right: 20px">Delete Cafe</a>
+            <a class="edit-link btn btn-primary" href="{{url_for('edit_post', post_id=cafe.id) }}" style="text-decoration: none; margin-right: 20px">Edit Cafe</a>
+            {% endif %}
+            </p>
+          </a>
+          <img src="{{cafe.img_url}}" width="500" height="400" class="cafe_img">
+          <p class="post-meta">
+            Coffee Price: <b>{{cafe.coffee_price}}</b>
+          </p>
+
+          {% if type == "cart": %}
+          <p class="post-meta">
+            Quantity: <b>{{cafe.quantity}}</b>
+            <div class="side-by-side">
+              <form class="add" action="/add-one" method="POST" style='float: left;'>
+                <div>
+                <button class="btn-primary" type="submit" id="add-button" value="{{ cafe.id }}" name="add-button">+</button>
+                </div>
+              </form>
+              <form class="minus" action="/minus-one" method="POST">
+                <div>
+                <button class="btn-primary" type="submit" id="minus-button" value="{{ cafe.id }}" name="minus-button">-</button>
+                </div>
+              </form>
+            </div>
+          </p>
+          {% endif %}
+
+          {% if type == "home" and logged_in: %}
+          <form action="/cart" method="POST">
+            <button class="btn btn-primary" type="submit" id="checkout-button" value="{{ cafe.id }}" name="cart-button">Add to Cart</button>
+          </form>
+          {% endif %}
+
+          {% if type == "cart" and logged_in: %}
+          <form action="/create-checkout-session" method="POST" style='float: left; margin-right: 20px;'>
+            <button class="btn btn-primary" type="submit" value="{{ cafe.id }}" name="checkout-button">Checkout</button>
+          </form>
+
+          <form action="/delete-from-cart" method="POST">
+            <button class="btn btn-primary" type="submit" value="{{ cafe.id }}" name="cart-delete">Delete</button>
+          </form>
+          {% endif %}
+
+        </div>
+        <hr>
+        {% endfor %}
+
+        <!-- New Post -->
+        <div class="clearfix">
+          {% if logged_in: %}
+          <a class="btn btn-primary float-right" href="{{url_for('home')}}">Back to Shop</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+{% include "footer.html" %}
